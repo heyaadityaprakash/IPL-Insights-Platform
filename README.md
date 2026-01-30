@@ -263,13 +263,11 @@ DATABASE_URL=postgresql://DIRECT_DATABASE_URL="postgresql://postgres:ipldemo2026
 
 PORT=5000
 
-Frontend
-VITE_API_BASE_URL=>
 
 🚀 Deployment
 
-Frontend: Deployed on Vercel
+Frontend: https://iplinsightsfrontend.vercel.app/
 
-Backend: Deployed on cloud platform (Render / Railway)
+Backend: https://ipl-insights-backend.onrender.com/api-docs/
 
-Database: Supabase PostgreSQL
+Database: Supabase PostgreSQL 
