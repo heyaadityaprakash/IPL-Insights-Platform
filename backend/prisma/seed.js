@@ -9,7 +9,7 @@ console.log("DB URL:", process.env.DATABASE_URL);
 const prisma = new PrismaClient();
 
 async function seedTeams() {
-  const teamsDir = path.join(__dirname, '../data/teams/');
+  const teamsDir = path.join(__dirname, '../data/teams');
   const files = fs.readdirSync(teamsDir);
 
   for (const file of files) {
@@ -17,29 +17,31 @@ async function seedTeams() {
     const raw = fs.readFileSync(filePath, 'utf-8');
     const teamData = JSON.parse(raw);
 
-    
-    for(const team of teamData){
-      const name=team.title
-      const shortName=team.abbr
-      const imgUrl=team.logo_url
-    
+    // Each file contains an array of teams
+    for (const team of teamData) {
+      const name = team.title;
+      const shortName = team.abbr;
+      const logoUrl = team.logo_url || team.thumb_url || null;
 
-    // console.log(teamData);
-    // process.exit(0);
+      if (!name) continue;
 
-    
-
-    if (!name) continue;
-
-    await prisma.team.upsert({
-      where: { name },
-      update: {},
-      create: { name, shortName, imgUrl },
-    });
+      await prisma.team.upsert({
+        where: { name },
+        update: {
+          shortName,
+          logoUrl,
+        },
+        create: {
+          name,
+          shortName,
+          logoUrl,
+        },
+      });
+    }
   }
-}
 
-  console.log('Teams seeded:', await prisma.team.count());
+  const count = await prisma.team.count();
+  console.log('Teams seeded:', count);
 }
 
 async function seedPlayers() {
@@ -308,7 +310,7 @@ async function seedStandings() {
 }
 
 async function main() {
-  // await seedTeams();
+  await seedTeams();
   // await seedPlayers()
   // await seedMatches();
   // await seedBattingStats();
